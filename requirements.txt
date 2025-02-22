@@ -1,0 +1,14 @@
+python-dotenv
+apify-client
+pandas
+docling
+markdown
+weaviate-client
+pydantic
+requests
+langchain 
+langchain-ibm 
+langchain-community 
+ibm-watsonx-ai 
+langgraph
+streamlit
