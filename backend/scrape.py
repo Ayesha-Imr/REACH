@@ -4,19 +4,31 @@ import os
 import json
 import pandas as pd
 import requests
+import streamlit as st
 
-# Load environment variables from a .env file
-load_dotenv()
+# # Load environment variables from a .env file
+# load_dotenv()
 
-# Get the necessary tokens from the environment variables
-APIFY_API_TOKEN = os.getenv("apify_token")
+# # Get the necessary tokens from the environment variables
+# APIFY_API_TOKEN = os.getenv("apify_token")
 
-ACCESS_TOKEN = os.getenv("REDDIT_ACCESS_TOKEN")
-CLIENT_ID = os.getenv("REDDIT_CLIENT_ID")
-CLIENT_SECRET = os.getenv("REDDIT_CLIENT_SECRET")
-USERNAME = os.getenv("REDDIT_USERNAME")
-PASSWORD = os.getenv("REDDIT_PASSWORD")
-USER_AGENT = os.getenv("REDDIT_USER_AGENT")
+# ACCESS_TOKEN = os.getenv("REDDIT_ACCESS_TOKEN")
+# CLIENT_ID = os.getenv("REDDIT_CLIENT_ID")
+# CLIENT_SECRET = os.getenv("REDDIT_CLIENT_SECRET")
+# USERNAME = os.getenv("REDDIT_USERNAME")
+# PASSWORD = os.getenv("REDDIT_PASSWORD")
+# USER_AGENT = os.getenv("REDDIT_USER_AGENT")
+
+
+# Get API tokens and credentials
+APIFY_API_TOKEN = st.secrets["apify"]["apify_token"]
+
+ACCESS_TOKEN = st.secrets["reddit"]["REDDIT_ACCESS_TOKEN"]
+CLIENT_ID = st.secrets["reddit"]["REDDIT_CLIENT_ID"]
+CLIENT_SECRET = st.secrets["reddit"]["REDDIT_CLIENT_SECRET"]
+USERNAME = st.secrets["reddit"]["REDDIT_USERNAME"]
+PASSWORD = st.secrets["reddit"]["REDDIT_PASSWORD"]
+USER_AGENT = st.secrets["reddit"]["REDDIT_USER_AGENT"]
 
 def scrape_tweets(search_query):
     """
@@ -147,3 +159,5 @@ def scrape_reddit(subreddit, query, limit=10):
         output += f"**Context:** {context[:500]}...\n"
 
     return output.strip()
+
+print(scrape_tweets("Python"))

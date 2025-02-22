@@ -12,14 +12,23 @@ from backend.database import query_db
 from langchain_community.tools.tavily_search import TavilySearchResults
 from langgraph.prebuilt import create_react_agent
 from langchain_core.messages import AIMessage
+from langchain_community.utilities.tavily_search import TavilySearchAPIWrapper
+import streamlit as st
 
 
-load_dotenv()
+# load_dotenv()
 
-os.environ["TAVILY_API_KEY"] = os.getenv("TAVILY_API_KEY")
-watson_api_key = os.environ["IBM_WATSON_KEY"]
+# os.environ["TAVILY_API_KEY"] = os.getenv("TAVILY_API_KEY")
+# watson_api_key = os.environ["IBM_WATSON_KEY"]
+# url = "https://us-south.ml.cloud.ibm.com"  
+# watson_project_id = os.environ["IBM_PROJECT_ID"] 
+
+
+tavily_api_key = st.secrets["tavily"]["TAVILY_API_KEY"]
+watson_api_key = st.secrets["ibm"]["IBM_WATSON_KEY"]
 url = "https://us-south.ml.cloud.ibm.com"  
-watson_project_id = os.environ["IBM_PROJECT_ID"] 
+watson_project_id = st.secrets["ibm"]["IBM_PROJECT_ID"] 
+
 
 # Function to get the summary of the startup given the extracted information from uploaded data sources
 def get_summary(info):
@@ -396,8 +405,14 @@ def ask_agent(query, startup_info):
             Returns: retrieved context as a string
         """
         return query_db(query)
+    
+    # Initialize the TavilySearchAPIWrapper with the API key
+    tavily_api_wrapper = TavilySearchAPIWrapper(tavily_api_key=tavily_api_key)
 
-    tools = [TavilySearchResults(max_results=1), vector_search]
+    # Initialize the TavilySearchResults tool with the API wrapper
+    tavily_search_tool = TavilySearchResults(api_wrapper=tavily_api_wrapper, max_results=1)
+
+    tools = [tavily_search_tool, vector_search]
 
 
     agent_executor = create_react_agent(chat_model, tools)

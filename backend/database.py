@@ -10,6 +10,7 @@ from typing import List
 import streamlit as st
 from streamlit import session_state
 
+
 if 'user_id' not in session_state:
     userid = ""
 else:
@@ -17,12 +18,19 @@ else:
 
 
 # Load environment variables from a .env file
-load_dotenv()
+# load_dotenv()
 
-# Get the API token from the environment variables
-weaviate_url = os.environ["WEAVIATE_URL"]
-weaviate_api_key = os.environ["WEAVIATE_API_KEY"]
-cohere_api_key = os.environ["COHERE_API_KEY"]
+# # Get the API token from the environment variables
+# weaviate_url = os.environ["WEAVIATE_URL"]
+# weaviate_api_key = os.environ["WEAVIATE_API_KEY"]
+# cohere_api_key = os.environ["COHERE_API_KEY"]
+
+
+
+weaviate_url = st.secrets["weaviate"]["WEAVIATE_URL"]
+weaviate_api_key =st.secrets["weaviate"]["WEAVIATE_API_KEY"]
+cohere_api_key = st.secrets["weaviate"]["COHERE_API_KEY"]
+
 
 headers = {
     "X-Cohere-Api-Key": cohere_api_key,
