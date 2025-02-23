@@ -84,8 +84,8 @@ if st.button("🚀 Submit Data", key="submit_data", help="Click to process and u
                 extracted_texts.append(main.url_extraction(webpage_url))
             if website_url:
                 extracted_texts.append(main.sitemap_extract(website_url))
-            if uploaded_file:
-                extracted_texts.append(main.local_extract(uploaded_file))
+            # if uploaded_file:
+            #     extracted_texts.append(main.local_extract(uploaded_file))
 
             combined_text = ' '.join(extracted_texts)
             summary_text = main.summary(combined_text)
