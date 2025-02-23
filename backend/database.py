@@ -194,6 +194,11 @@ def query_db(query):
 
     collection = client.collections.get("Users")
 
+    if 'user_id' not in session_state:
+        userid = ""
+    else:
+        userid = session_state.user_id
+
     print("\n\nUSER ID: ", userid, "\n\n")
 
     try:
