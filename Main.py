@@ -1,4 +1,5 @@
 import streamlit as st
+import os
 
 # Set up page configuration
 st.set_page_config(page_title="REACH - Home", page_icon="🚀", layout="wide")
@@ -70,18 +71,20 @@ st.markdown(
     unsafe_allow_html=True
 )
 
+# Get absolute path to the diagrams folder
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+DIAGRAMS_DIR = os.path.join(BASE_DIR, "diagrams")
+
 # Flow Diagrams Expander
 with st.expander("📊 **How REACH Works: Flow Diagrams**", expanded=False):
     st.markdown('<div class="image-container">', unsafe_allow_html=True)
-    st.image(r"diagrams\reach-diag-1.png", caption="Step 1: Data Upload Flow", use_container_width=False, width=400)
+    st.image(os.path.join(DIAGRAMS_DIR, "reach-diag-1.png"), caption="Step 1: Data Upload Flow", use_column_width=False, width=400)
     st.markdown('</div>', unsafe_allow_html=True)
-    st.markdown('</div>', unsafe_allow_html=True)
-    
+
     st.markdown('<div class="image-container">', unsafe_allow_html=True)
-    st.image(r"diagrams\reach-diag-2.png", caption="Step 2: LLM Analysis & Insights Flow", use_container_width=False, width=400)
+    st.image(os.path.join(DIAGRAMS_DIR, "reach-diag-2.png"), caption="Step 2: LLM Analysis & Insights Flow", use_column_width=False, width=400)
     st.markdown('</div>', unsafe_allow_html=True)
-    st.markdown('</div>', unsafe_allow_html=True)
-    
+
     st.markdown('<div class="image-container">', unsafe_allow_html=True)
-    st.image(r"diagrams\reach-diag-3.png", caption="Step 3: AI Agent Flow", use_container_width=False, width=400)
+    st.image(os.path.join(DIAGRAMS_DIR, "reach-diag-3.png"), caption="Step 3: AI Agent Flow", use_column_width=False, width=400)
     st.markdown('</div>', unsafe_allow_html=True)
