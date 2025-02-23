@@ -79,15 +79,28 @@ To run REACH locally, follow these steps:
 To better understand REACH's internal processes, refer to the following flow diagrams:
 
 1. **User Input Processing**:
+
    ![User Input Processing](diagrams/reach-diag-1.png)
+
    *Description*: This diagram illustrates how REACH processes user-provided materials to generate a comprehensive startup profile.
 
+
+
+
 2. **Social Media Data Analysis**:
+
    ![Social Media Data Analysis](diagrams/reach-diag-2.png)
-   *Description*: This diagram showcases the steps REACH takes to collect and analyze data from each social media platform, providing detailed market insights.
+
+   *Description*: This diagram showcases the steps REACH takes to collect and analyze data from each social media platform, providing detailed market insights
+
+
+
+
 
 3. **AI Agent Interaction**:
+
    ![AI Agent Interaction](diagrams/reach-diag-3.png)
+
    *Description*: This diagram depicts the interaction between the user and the tool-calling AI agent for in-depth data exploration.
 
 ---
