@@ -179,7 +179,7 @@ def get_instagram_insights(startup_info, instagram_data):
 
         Important Note: If the provided Instagram data does not contain any significant or relevant info about one or more of the above points,
         you can generate hypothetical insights based on the startup description and general Instagram trends in the industry, as well as your own valid knowledge. 
-
+        The output MUST be of the format pasted below with these exact fields. Do not change/modify/exclude any of the following JSON fields.
         Output Format (JSON):
         {
         "platform": "Instagram",

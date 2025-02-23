@@ -53,6 +53,7 @@ if 'user_id' not in session_state:
 if st.button("🔍 Get Instagram Insights", key="get_instagram_insights"):
     with st.spinner("📡 Fetching startup info..."):
         startup_info = main.startup_info(session_state.user_id)
+        print("This is startup info:" + str(startup_info))
 
     if "keywords" not in session_state:
         with st.spinner("🔑 Extracting relevant Instagram keywords..."):
@@ -63,10 +64,13 @@ if st.button("🔍 Get Instagram Insights", key="get_instagram_insights"):
         instagram_keywords = session_state.keywords.instagram
 
     with st.spinner("📷 Fetching relevant Instagram data..."):
+        print(instagram_keywords)
         insta_data = main.get_instagram_data(instagram_keywords)
 
     with st.spinner("📊 Generating insights from Instagram data..."):
+        print(insta_data)
         insights = main.instagram_insights(startup_info, insta_data)
+        print(insights)
 
     # Display insights nicely
     if insights:
