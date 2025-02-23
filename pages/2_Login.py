@@ -63,7 +63,8 @@ else:
                 user_id = main.login(username, password)
                 if user_id:
                     st.success("✅ Login successful! Redirecting...", icon="🚀")
-                    session_state.user_id = user_id
+                    session_state.user_id = user_id  
+                    main.set_userid(user_id)  
                     st.rerun()
                 else:
                     st.error("❌ Incorrect username or password. Please try again.")

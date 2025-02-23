@@ -63,7 +63,8 @@ else:
                 user_id = main.register(username, password)
                 if user_id:
                     st.success("✅ Sign up successful! Redirecting...", icon="🎉")
-                    session_state.user_id = user_id
+                    session_state.user_id = user_id  
+                    main.set_userid(user_id)  
                     st.switch_page("pages/3_DataUpload.py")
                 else:
                     st.error("❌ Sign up failed. Username may already exist or there was an issue.")

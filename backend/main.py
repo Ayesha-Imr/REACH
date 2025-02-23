@@ -1,5 +1,8 @@
 from backend import database, llm, extract, scrape
 
+def set_userid(userid):
+    return database.set_user_id(userid)
+
 def register(username, password):
     return database.sign_up(username, password)
 

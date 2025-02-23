@@ -92,7 +92,7 @@ if st.button("🔍 Get Reddit Insights", key="get_reddit_insights"):
             st.markdown(f"📢 {insights.content_strategy}")
 
         # Marketing Tactics
-        with st.expander("🎯 **Community Engagemen**", expanded=True):
+        with st.expander("🎯 **Community Engagement**", expanded=True):
             st.markdown(f"🚀 {insights.community_engagement}")
 
     else:

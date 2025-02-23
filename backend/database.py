@@ -11,14 +11,6 @@ import streamlit as st
 from streamlit import session_state
 
 
-if 'user_id' not in session_state:
-    userid = ""
-else:
-    userid = session_state.user_id
-
-print("\n\nUSER ID: ", userid, "\n\n")
-
-
 # Load environment variables from a .env file
 # load_dotenv()
 
@@ -27,6 +19,23 @@ print("\n\nUSER ID: ", userid, "\n\n")
 # weaviate_api_key = os.environ["WEAVIATE_API_KEY"]
 # cohere_api_key = os.environ["COHERE_API_KEY"]
 
+# Global variable to store user_id if session_state is inaccessible
+USER_ID_GLOBAL = None
+
+def set_user_id(user_id):
+    """Set a global user_id to be used if session_state is not available."""
+    global USER_ID_GLOBAL
+    USER_ID_GLOBAL = user_id
+    print("USER ID GLOBAL: ", USER_ID_GLOBAL)
+
+def get_user_id():
+    """Retrieve user_id from session_state if available, otherwise use global fallback."""
+    if 'user_id' in st.session_state:
+        return st.session_state.user_id
+    if USER_ID_GLOBAL:
+        return USER_ID_GLOBAL
+    else:
+        raise ValueError("User ID not found. Please log in first.")
 
 
 weaviate_url = st.secrets["weaviate"]["WEAVIATE_URL"]
@@ -182,6 +191,7 @@ def get_startup_info(userid):
     finally:
         client.close()
 
+
 def query_db(query):
     # Connect to Weaviate Cloud
     client = weaviate.connect_to_weaviate_cloud(
@@ -194,14 +204,9 @@ def query_db(query):
 
     collection = client.collections.get("Users")
 
-    if 'user_id' not in session_state:
-        userid = ""
-    else:
-        userid = session_state.user_id
-
-    print("\n\nUSER ID: ", userid, "\n\n")
-
     try:
+        userid = get_user_id()  # Retrieve user_id safely
+
         user_data = collection.with_tenant(userid)
 
         # Perform vector search on tenantA's version
