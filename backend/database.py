@@ -16,6 +16,8 @@ if 'user_id' not in session_state:
 else:
     userid = session_state.user_id
 
+print("\n\nUSER ID: ", userid, "\n\n")
+
 
 # Load environment variables from a .env file
 # load_dotenv()
@@ -40,47 +42,72 @@ headers = {
 client = weaviate.connect_to_weaviate_cloud(
     cluster_url=weaviate_url,
     auth_credentials=Auth.api_key(weaviate_api_key),
-    headers=headers
-)
+    headers=headers,
+    additional_config=wvc.init.AdditionalConfig(use_grpc=False, timeout=wvc.init.Timeout(init=60)),  # Disable gRPC, increase timeout    skip_init_checks=True  # Skip startup checks
+    )
+
 
 collection = client.collections.get("Users")
 
 def sign_up(username, password):
-
-    # Hash the username and password to create a unique ID
-    hash_input = username + password
-    hash_id = hashlib.sha256(hash_input.encode()).hexdigest()
-
-    # Check if the username and password combination already exists
-    tenants = collection.tenants.get()
-
-    if hash_id in tenants:
-        print("This combination of username and password already exists. Please use a different username or password.")
-    else:
-        # Create a new tenant with the hashed ID
-        collection.tenants.create(
-    tenants=[
-        Tenant(name=hash_id),
-        ]
+    # Connect to Weaviate Cloud
+    client = weaviate.connect_to_weaviate_cloud(
+    cluster_url=weaviate_url,
+    auth_credentials=Auth.api_key(weaviate_api_key),
+    headers=headers,
+    additional_config=wvc.init.AdditionalConfig(use_grpc=False, timeout=wvc.init.Timeout(init=60)),  # Disable gRPC, increase timeout    skip_init_checks=True  # Skip startup checks
     )
-        return hash_id
+
+
+    collection = client.collections.get("Users")
+
+    try:
+        # Hash the username and password to create a unique ID
+        hash_input = username + password
+        hash_id = hashlib.sha256(hash_input.encode()).hexdigest()
+
+        # Check if the username and password combination already exists
+        tenants = collection.tenants.get()
+
+        if hash_id in tenants:
+            print("This combination of username and password already exists. Please use a different username or password.")
+        else:
+            # Create a new tenant with the hashed ID
+            collection.tenants.create(
+                tenants=[
+                    Tenant(name=hash_id),
+                ]
+            )
+            return hash_id
+    finally:
+        client.close()
     
 
 def log_in(username, password):
+    # Connect to Weaviate Cloud
+    client = weaviate.connect_to_weaviate_cloud(
+    cluster_url=weaviate_url,
+    auth_credentials=Auth.api_key(weaviate_api_key),
+    headers=headers,
+    additional_config=wvc.init.AdditionalConfig(use_grpc=False, timeout=wvc.init.Timeout(init=60)),  # Disable gRPC, increase timeout    skip_init_checks=True  # Skip startup checks
+    )
 
-    # Hash the username and password to recreate the unique ID
-    hash_input = username + password
-    hash_id = hashlib.sha256(hash_input.encode()).hexdigest()
+    collection = client.collections.get("Users")
 
-    tenants = collection.tenants.get()
+    try:
+        # Hash the username and password to recreate the unique ID
+        hash_input = username + password
+        hash_id = hashlib.sha256(hash_input.encode()).hexdigest()
 
-    if hash_id in tenants:
-        print("You have successfully logged in.")
-        return hash_id
-    else:
-        print("User not found. Please sign up first.")
+        tenants = collection.tenants.get()
 
-
+        if hash_id in tenants:
+            print("You have successfully logged in.")
+            return hash_id
+        else:
+            print("User not found. Please sign up first.")
+    finally:
+        client.close()
 
 
 def chunk(text: str, chunk_size: int, overlap_size: int) -> List[str]:
@@ -110,41 +137,82 @@ def get_chunks_list(chunked_text: List[str], source, description):
     return chunks_list
 
 def add_data(chunks_list, userid):
+    # Connect to Weaviate Cloud
+    client = weaviate.connect_to_weaviate_cloud(
+    cluster_url=weaviate_url,
+    auth_credentials=Auth.api_key(weaviate_api_key),
+    headers=headers,
+    additional_config=wvc.init.AdditionalConfig(use_grpc=False, timeout=wvc.init.Timeout(init=60)),  # Disable gRPC, increase timeout    skip_init_checks=True  # Skip startup checks
+    )
 
-    # get the tenant
-    user = collection.with_tenant(userid)
+    collection = client.collections.get("Users")
 
-    # Insert the data
-    object_id = user.data.insert_many(chunks_list)
+    try:
+        # get the tenant
+        user = collection.with_tenant(userid)
 
-    return object_id
+        # Insert the data
+        object_id = user.data.insert_many(chunks_list)
+
+        return object_id
+    finally:
+        client.close()
 
 def get_startup_info(userid):
-    user_data = collection.with_tenant(userid)
-
-    result = user_data.query.fetch_objects(
-        limit=1,
-        return_properties=["startup_description"]
+    # Connect to Weaviate Cloud
+    client = weaviate.connect_to_weaviate_cloud(
+    cluster_url=weaviate_url,
+    auth_credentials=Auth.api_key(weaviate_api_key),
+    headers=headers,
+    additional_config=wvc.init.AdditionalConfig(use_grpc=False, timeout=wvc.init.Timeout(init=60)),  # Disable gRPC, increase timeout    skip_init_checks=True  # Skip startup checks
+    skip_init_checks=True  # Skip startup checks
     )
 
-    return result.objects[0].properties["startup_description"]
+    collection = client.collections.get("Users")
 
+    try:
+        user_data = collection.with_tenant(userid)
+
+        result = user_data.query.fetch_objects(
+            limit=1,
+            return_properties=["startup_description"]
+        )
+
+        return result.objects[0].properties["startup_description"]
+    finally:
+        client.close()
 
 def query_db(query):
-    user_data = collection.with_tenant(userid)
-
-    # Perform vector search on tenantA's version
-    response = user_data.query.near_text(
-        query=query,
-        limit=5
+    # Connect to Weaviate Cloud
+    client = weaviate.connect_to_weaviate_cloud(
+    cluster_url=weaviate_url,
+    auth_credentials=Auth.api_key(weaviate_api_key),
+    headers=headers,
+    additional_config=wvc.init.AdditionalConfig(use_grpc=False, timeout=wvc.init.Timeout(init=60)),  # Disable gRPC, increase timeout    skip_init_checks=True  # Skip startup checks
+    skip_init_checks=True  # Skip startup checks
     )
 
-    res = response.objects
+    collection = client.collections.get("Users")
 
-    context = ""
+    print("\n\nUSER ID: ", userid, "\n\n")
 
-    for o in res:
-        context += o.properties['content']
-    print(context)
-    
-    return context
+    try:
+        user_data = collection.with_tenant(userid)
+
+        # Perform vector search on tenantA's version
+        response = user_data.query.near_text(
+            query=query,
+            limit=5
+        )
+
+        res = response.objects
+
+        context = ""
+
+        for o in res:
+            context += o.properties['content']
+        print(context)
+
+        return context
+    finally:
+        client.close()

@@ -48,6 +48,7 @@ def get_summary(info):
 
     Ensure the summary is clear, structured, and objective, strictly reflecting the provided information.
     If any of the above details are missing from the input, omit them rather than speculating or fabricating information.
+    Don't mention statements showing that any thing is missing.
     Keep it concise, factual, and insightful."""
 
 

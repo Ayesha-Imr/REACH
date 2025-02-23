@@ -159,5 +159,3 @@ def scrape_reddit(subreddit, query, limit=10):
         output += f"**Context:** {context[:500]}...\n"
 
     return output.strip()
-
-print(scrape_tweets("Python"))
